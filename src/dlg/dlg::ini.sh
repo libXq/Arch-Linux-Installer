@@ -51,7 +51,7 @@ function dlg::ini::lst {
   fi
 }
 
-function dlg::ini() {
+function dlg::ini {
   local -n r_aar=${1}
 
   if [[ -f ${7-} ]]; then
