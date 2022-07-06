@@ -16,7 +16,7 @@ function ins::ini::time {
   + timedatectl set-timezone "${x[timezone]}"
   + timedatectl set-ntp true
 
-  while :; do
+  while true; do
     sleep 1
     if [[ $(timedatectl |
       grep --max-count=1 --only-matching --ignore-case --perl-regexp \

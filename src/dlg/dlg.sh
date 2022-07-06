@@ -28,11 +28,11 @@ function dlg::export {
 function dlg::run {
   local -n r_aar=${1}
   local -A sts sls
-  local -a kms tzs lcs drs ops lst
+  local -a ops kms tzs lcs drs lst
 
-  dlg::ini sts ops kms tzs lcs drs config.ini
+  dlg::ini sts ops kms tzs lcs drs "${2-}"
 
-  while :; do
+  while true; do
     lst=(
       1 "$(printf '{%-1s} %s' "${sls[keymap]:+*}" 'Select Keymap')"
       2 "$(printf '{%-1s} %s' "${sls[timezone]:+*}" 'Select Timezone')"
@@ -54,44 +54,47 @@ function dlg::run {
     dlg::tui::menu sls[0] lst 'Arch Linux Installer' '' \
       "${sts[height]-}" "${sts[width]-}" \
       "${sts[height_sub]-}" "${sts[color]-}" ||
-      { { ((${?} != 1)) && return 2; } || return 1; }
+      { { ((${?} != 1)) && false; } || {
+        log::message 'aborted'
+        exit
+      }; }
 
     case "${sls[0]}" in
     1)
       dlg::tui::radiolist sls[keymap] kms 'Keymap' '' \
         "${sts[height]-}" "${sts[width]-}" \
         "${sts[height_sub]-}" "${sts[color]-}" ||
-        { ((${?} != 1)) && return 2; }
+        { ((${?} != 1)) && false; }
       ;;
     2)
       dlg::tui::radiolist sls[timezone] tzs 'Timezone' '' \
         "${sts[height]-}" "${sts[width]-}" \
         "${sts[height_sub]-}" "${sts[color]-}" ||
-        { ((${?} != 1)) && return 2; }
+        { ((${?} != 1)) && false; }
       ;;
     3)
       dlg::tui::radiolist sls[locale] lcs 'Locale' '' \
         "${sts[height]-}" "${sts[width]-}" \
         "${sts[height_sub]-}" "${sts[color]-}" ||
-        { ((${?} != 1)) && return 2; }
+        { ((${?} != 1)) && false; }
       ;;
     4)
       dlg::tui::radiolist sls[drive] drs 'Drive' '' \
         "${sts[height]-}" "${sts[width]-}" \
         "${sts[height_sub]-}" "${sts[color]-}" ||
-        { ((${?} != 1)) && return 2; }
+        { ((${?} != 1)) && false; }
       ;;
     5)
       dlg::tui::inputbox sls[hostname] 'Hostname' '' \
         "${sts[height]-}" "${sts[width]-}" \
         "${sts[color]-}" ||
-        { ((${?} != 1)) && return 2; }
+        { ((${?} != 1)) && false; }
       ;;
     6)
       dlg::tui::checklist sls[options] ops 'Additional Options' '' \
         "${sts[height]-}" "${sts[width]-}" \
         "${sts[height_sub]-}" "${sts[color]-}" ||
-        { ((${?} != 1)) && return 2; }
+        { ((${?} != 1)) && false; }
       ;;
     7)
       {
@@ -99,12 +102,11 @@ function dlg::run {
           "$(dlg::fmt::summary sls)" \
           "${sts[height]-}" "${sts[width]-}" \
           "${sts[color]-}" &&
+          dlg::export sls r_aar &&
           break
       } ||
-        { ((${?} != 1)) && return 2; }
+        { ((${?} != 1)) && false; }
       ;;
     esac
   done
-
-  dlg::export sls r_aar
 }

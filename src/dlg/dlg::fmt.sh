@@ -41,7 +41,7 @@ function dlg::fmt::keymap {
     ;;
   esac
 
-  case ${j} in
+  case "${j}" in
   *UTF_8*)
     j=${j/UTF_8/UTF-8}
     ;;

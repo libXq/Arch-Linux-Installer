@@ -14,11 +14,14 @@ function dlg::get::lst::keymaps {
       /usr/share/kbd/keymaps/i386/@(azerty|qwert[zy])/!(@(azerty|emacs|defkeymap)*).map.gz
   )
 
-  [[ -n ${arr-} ]] &&
+  if [[ -n ${arr-} ]]; then
     printf '%s=%s\n' "${arr[@]}" |
-    sort --field-separator='=' \
-      --key=2,2 \
-      --key=1,1 --unique
+      sort --field-separator='=' \
+        --key=2,2 \
+        --key=1,1 --unique
+  else
+    false
+  fi
 }
 
 function dlg::get::lst::timezones {
@@ -32,11 +35,14 @@ function dlg::get::lst::timezones {
     fi
   done </usr/share/zoneinfo/tzdata.zi
 
-  [[ -n ${arr-} ]] &&
+  if [[ -n ${arr-} ]]; then
     printf '%s=%s\n' "${arr[@]}" |
-    sort --field-separator='=' \
-      --key=1.2,1.7 --key=2.2,2.4gr \
-      --key=1,1 --unique
+      sort --field-separator='=' \
+        --key=1.2,1.7 --key=2.2,2.4gr \
+        --key=1,1 --unique
+  else
+    false
+  fi
 }
 
 function dlg::get::lst::locales {
@@ -50,11 +56,14 @@ function dlg::get::lst::locales {
     fi
   done </etc/locale.gen
 
-  [[ -n ${arr-} ]] &&
+  if [[ -n ${arr-} ]]; then
     printf '%s=%s\n' "${arr[@]}" |
-    sort --field-separator='=' \
-      --key=2,2 \
-      --key=1,1 --unique
+      sort --field-separator='=' \
+        --key=2,2 \
+        --key=1,1 --unique
+  else
+    false
+  fi
 }
 
 function dlg::get::lst::drives {
@@ -70,6 +79,9 @@ function dlg::get::lst::drives {
       --exclude=7,11 --output=PATH
   )
 
-  [[ -n ${arr-} ]] &&
+  if [[ -n ${arr-} ]]; then
     printf '%s=%s\n' "${arr[@]}"
+  else
+    false
+  fi
 }

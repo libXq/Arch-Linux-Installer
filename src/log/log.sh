@@ -33,7 +33,7 @@ function + {
   co=$("${@}" 2>&1) || ec=${?}
 
   if [[ -n ${co} ]]; then
-    sed --expression="s/^/\--->/" <<<${co} >&4
+    sed --expression='s/^/\--->/' <<<${co} >&4
   fi
 
   if [[ -n ${ec-} ]]; then
@@ -43,8 +43,6 @@ function + {
 }
 
 function log::ini {
-  declare LOG
-  printf -v LOG '%(%d_%m_%Y_%H:%M)T.log'
-  exec 4>"${LOG}"
+  exec 4>"$(printf '%(%d_%m_%Y)T.log')"
   trap 'log::error ${?} "${BASH_COMMAND}" "${FUNCNAME[0]:-source}"' ERR
 }

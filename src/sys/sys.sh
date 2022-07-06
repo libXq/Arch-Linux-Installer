@@ -43,7 +43,7 @@ function sys::blk::partition {
 function sys::blk::puuid {
   lsblk --raw --noheadings --output=PARTUUID "${1}" |
     grep --max-count=1 --only-matching --perl-regexp \
-      --regexp="^\K[-[:alnum:]]+"
+      --regexp='^\K[-[:alnum:]]+'
 }
 
 function sys::fle::offset {

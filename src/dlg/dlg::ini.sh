@@ -27,7 +27,11 @@ function dlg::ini::cfg {
     fi
   done <"${3}"
 
-  [[ -n ${r_aar-} || -n ${r_arr-} ]]
+  if [[ -n ${r_aar-} || -n ${r_arr-} ]]; then
+    true
+  else
+    false
+  fi
 }
 
 function dlg::ini::lst {
@@ -40,10 +44,14 @@ function dlg::ini::lst {
     fi
   done <<<${2}
 
-  [[ -n ${r_arr-} ]]
+  if [[ -n ${r_arr-} ]]; then
+    true
+  else
+    false
+  fi
 }
 
-function dlg::ini {
+function dlg::ini() {
   local -n r_aar=${1}
 
   if [[ -f ${7-} ]]; then
